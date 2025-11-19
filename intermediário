@@ -1,0 +1,174 @@
+import random
+
+lista_inimigo = []
+lista_inimigo2 = []
+
+class Arma:
+  def __init__(self, nome, dano):
+    self.nome = nome
+    self.dano = dano
+
+class Poçao:
+  def __init__ (self, nome, cura):
+    self.nome = nome
+    self.cura = cura
+
+class Inventario:
+  def __init__(self, tamanho, tamanho2):
+    self.tamanho = tamanho
+    self.tamanho2 = tamanho2
+    self.armas = []
+    self.poçoes = []
+
+arma1 = Arma("q", 5)
+arma2 = Arma("z", 10)
+
+poçao1 = Poçao("a", 10)
+
+inventario1 = Inventario(20, 20)
+inventario2 = Inventario(20, 20)
+
+inventario1.armas.append(arma1)
+inventario2.armas.append(arma2)
+inventario2.poçoes.append(poçao1)
+
+class Personagem():
+  def __init__(self, nome, PV, força, magia, precisao, inimigo, inventario):
+    self.nome = nome
+    self._PV = PV
+    self.força = força
+    self.magia = magia
+    self.precisao = precisao
+    self.inimigo = inimigo
+    self.inventario = inventario
+
+  def atacar(self, n_arma, valor_dado):
+    self.dano = self.inventario.armas[n_arma].dano + self.força + valor_dado
+    print(f"{self.nome} atacou com {self.dano} de dano")
+    return self.dano
+
+  def receber_dano(self, n_inimigo):
+
+    dano = self.inimigo[n_inimigo].dano
+    print(f"{self.nome} recebeu dano de {dano}")
+
+    if dano > self._PV:
+      self._PV = 0
+      print(f"{self.nome} morreu")
+
+    else:
+      self._PV = self._PV - dano
+
+  def usar_poçao(self, n_poçao):
+
+    cura = self.inventario.poçoes[n_poçao].cura
+
+    if self._PV + cura > 100:
+      self._PV = 100
+
+    self._PV = self._PV + cura
+    print(f"{self.nome} recuperou {cura} pontos de vida")
+
+  def esta_vivo(self):
+    if self._PV > 0:
+      print("Vivo")
+
+    else:
+      print("Morto")
+
+class Guerreiro(Personagem):
+  def __init__(self, nome, PV, força, magia, precisao, inimigo, inventario):
+    super().__init__(nome, PV, força, magia, precisao, inimigo, inventario)
+
+  def atacar(self, n_arma, valor_dado):
+
+    self.dano = self.inventario.armas[n_arma].dano + self.força + valor_dado
+    print(f"{self.nome} atacou com {self.dano} de dano")
+    return self.dano
+
+class Mago(Personagem):
+  def __init__(self, nome, PV, força,  magia, precisao, inimigo, inventario):
+    super().__init__(nome, PV, força,  magia, precisao, inimigo, inventario)
+
+  def atacar(self, n_arma, valor_dado):
+
+    self.dano = self.inventario.armas[n_arma].dano + self.magia + valor_dado
+    print(f"{self.nome} atacou com {self.dano} de dano")
+    return self.dano
+
+class Arqueiro(Personagem):
+  def __init__(self, nome, PV, força, magia, precisao, inimigo, inventario):
+    super().__init__(nome, PV, força, magia, precisao, inimigo, inventario)
+
+  def atacar(self, n_arma, valor_dado):
+
+    self.dano = self.inventario.armas[n_arma].dano + self.precisao + valor_dado
+    print(f"{self.nome} atacou com {self.dano} de dano")
+    return self.dano
+
+class Monstro():
+  def __init__(self, nome, PV, força, magia, precisao, inimigo2, inventario):
+    self.nome = nome
+    self._PV = PV
+    self.força = força
+    self.magia = magia
+    self.inimigo2 = inimigo2
+    self.inventario = inventario
+
+  def atacar(self, n_arma, valor_dado):
+
+    self.dano = self.inventario.armas[n_arma].dano + self.força + valor_dado
+    print(f"{self.nome} atacou com {self.dano} de dano")
+    return self.dano
+
+  def receber_dano(self, n_inimigo):
+
+    dano = self.inimigo2[n_inimigo].dano
+
+    if dano >= self._PV:
+      self._PV = 0
+      print(f"{self.nome} morreu")
+
+    else:
+      self._PV = self._PV - dano
+
+    print(f"{self.nome} recebeu dano de {dano}")
+
+  def esta_vivo(self):
+    if self._PV > 0:
+      print("Vivo")
+
+    else:
+      print("Morto")
+
+class Goblin_Padrao(Monstro):
+  def __init__(self, nome, PV, força, magia, precisao, inimigo2, inventario):
+    super().__init__(nome, PV, força, magia, precisao, inimigo2, inventario)
+
+  def atacar(self, n_arma, valor_dado):
+    self.dano = self.inventario.armas[n_arma].dano + self.força + valor_dado
+    if valor_dado > 4:
+      self.dano = self.dano * 2
+    print(f"{self.nome} atacou com {self.dano} de dano")
+    return self.dano
+
+inimigo1 = Monstro("b", 100, 10, 10, 10, lista_inimigo2, inventario1)
+lista_inimigo.append(inimigo1)
+
+p1 = Personagem("a", 100, 10, 10, 10, lista_inimigo, inventario2)
+lista_inimigo2.append(p1)
+
+goblin1 = Goblin_Padrao("a2", 100, 10, 10, 10, lista_inimigo2, inventario1)
+lista_inimigo.append(goblin1)
+
+goblin1.esta_vivo()
+
+p2 = Mago("nome", 100, 10, 10, 10, lista_inimigo, inventario2)
+lista_inimigo2.append(p2)
+
+orc1.atacar(0, dado1.rolar())
+p1.atacar(0, dado1.rolar())
+inimigo1.atacar(0, dado1.rolar())
+p1.receber_dano(0)
+inimigo1.receber_dano(0)
+p1.usar_poçao(0)
