@@ -1,0 +1,302 @@
+import random
+
+lista_inimigo = []
+lista_inimigo2 = []
+lista_habilidades1 = []
+lista_habilidades2 = []
+lista_inimigo3 = []
+lista_inimigo4 = []
+
+class Arma:
+  def __init__(self, nome, dano):
+    self.nome = nome
+    self.dano = dano
+
+class Poçao:
+  def __init__ (self, nome, cura):
+    self.nome = nome
+    self.cura = cura
+
+class Inventario:
+  def __init__(self, tamanho, tamanho2):
+    self.tamanho = tamanho
+    self.tamanho2 = tamanho2
+    self.armas = []
+    self.poçoes = []
+
+class Habilidade():
+  def __init__(self, H_nome, H_magia):
+    self.H_nome = H_nome
+    self.H_magia = H_magia
+    funcao_nome = self.H_nome
+
+class Dado():
+  def __init__(self, n_faces):
+    self.n_faces = n_faces
+
+  def rolar(self):
+    n = random.randrange(0, self.n_faces)
+    return n
+
+arma1 = Arma("q", 5)
+arma2 = Arma("z", 10)
+
+poçao1 = Poçao("a", 10)
+
+inventario1 = Inventario(20, 20)
+inventario2 = Inventario(20, 20)
+
+inventario1.armas.append(arma1)
+inventario2.armas.append(arma2)
+inventario2.poçoes.append(poçao1)
+
+BolaDeFogo = Habilidade("BoladeFogo", 5)
+AtaqueForte = Habilidade("AtaqueForte", 5)
+lista_habilidades1.append(BolaDeFogo)
+lista_habilidades2.append(AtaqueForte)
+
+dado1 = Dado(6)
+
+class Personagem():
+  def __init__(self, nome, PV, força, magia, precisao, inimigo, inventario, habilidades):
+    self.nome = nome
+    self._PV = PV
+    self.força = força
+    self.magia = magia
+    self.precisao = precisao
+    self.inimigo = inimigo
+    self.inventario = inventario
+    self.habilidades = habilidades
+
+  def habilidade(self, n_habilidade, n_inimigo):
+    print(f"{self.nome} usou {self.habilidades[n_habilidade].H_nome} em {self.inimigo[n_inimigo].nome}")
+    self.magia = self.magia - self.habilidades[n_habilidade].H_magia
+    self.dano = 10
+
+  def atacar(self, n_arma, valor_dado):
+    self.dano = self.inventario.armas[n_arma].dano + self.força + valor_dado
+    print(f"{self.nome} atacou com {self.dano} de dano")
+    return self.dano
+
+  def receber_dano(self, n_inimigo):
+
+    dano = self.inimigo[n_inimigo].dano
+    print(f"{self.nome} recebeu dano de {dano}")
+
+    if dano > self._PV:
+      self._PV = 0
+      print(f"{self.nome} morreu")
+
+    else:
+      self._PV = self._PV - dano
+
+  def usar_poçao(self, n_poçao):
+
+    cura = self.inventario.poçoes[n_poçao].cura
+
+    if self._PV + cura > 100:
+      self._PV = 100
+
+    self._PV = self._PV + cura
+    print(f"{self.nome} recuperou {cura} pontos de vida")
+
+  def esta_vivo(self):
+    if self._PV > 0:
+      return True
+    else:
+      return False
+
+class Guerreiro(Personagem):
+  def __init__(self, nome, PV, força, magia, precisao, inimigo, inventario, habilidades):
+    super().__init__(nome, PV, força, magia, precisao, inimigo, inventario, habilidades)
+
+class Mago(Personagem):
+  def __init__(self, nome, PV, força,  magia, precisao, inimigo, inventario, habilidades):
+    super().__init__(nome, PV, força,  magia, precisao, inimigo, inventario, habilidades)
+
+class Arqueiro(Personagem):
+  def __init__(self, nome, PV, força, magia, precisao, inimigo, inventario, habilidades):
+    super().__init__(nome, PV, força, magia, precisao, inimigo, inventario, habilidades)
+
+class Monstro():
+  def __init__(self, nome, PV, força, magia, precisao, inimigo2, inventario):
+    self.nome = nome
+    self._PV = PV
+    self.força = força
+    self.magia = magia
+    self.inimigo2 = inimigo2
+    self.inventario = inventario
+
+  def atacar(self, n_arma, valor_dado):
+
+    self.dano = self.inventario.armas[n_arma].dano + self.força + valor_dado
+    print(f"{self.nome} atacou com {self.dano} de dano")
+    return self.dano
+
+  def receber_dano(self, n_inimigo):
+
+    dano = self.inimigo2[n_inimigo].dano
+
+    if dano >= self._PV:
+      self._PV = 0
+      print(f"{self.nome} morreu")
+
+    else:
+      self._PV = self._PV - dano
+
+    print(f"{self.nome} recebeu dano de {dano}")
+
+  def esta_vivo(self):
+    if self._PV > 0:
+      print("Vivo")
+      return True
+
+    else:
+      print("Morto")
+      return False
+
+class Goblin_Padrao(Monstro):
+  def __init__(self, nome, PV, força, magia, precisao, inimigo2, inventario):
+    super().__init__(nome, PV, força, magia, precisao, inimigo2, inventario)
+
+class Orc(Monstro):
+  def __init__(self, nome, PV, força, magia, precisao, inimigo2, inventario):
+    super().__init__(nome, PV, força, magia, precisao, inimigo2, inventario)
+
+  def atacar(self, n_arma, valor_dado):
+    self.dano = self.inventario.armas[n_arma].dano + self.força + valor_dado
+    if valor_dado > 4:
+      self.dano = self.dano * 2
+    print(f"{self.nome} atacou com {self.dano} de dano")
+    return self.dano
+
+class Batalha():
+  def __init__(self, combatente1, combatente2):
+    self.combatente1 = combatente1
+    self.combatente2 = combatente2
+
+    while(self.combatente1._PV and self.combatente2._PV > 0):
+      print(f"PV1: {self.combatente1._PV}, PV2: {self.combatente2._PV}")
+
+      escolha1 = input(f"{self.combatente1.nome}: escolha entre ataque, habilidade, ou poção")
+
+      if escolha1 == "ataque":
+        self.combatente1.atacar(0, dado1.rolar())
+        self.combatente2.receber_dano(0)
+      elif escolha1 == "habilidade":
+        self.combatente1.habilidade(0,0)
+        self.combatente2.receber_dano(0)
+      elif escolha1 == "poção":
+        self.combatente1.usar_poçao(0)
+
+      if (self.combatente1._PV and self.combatente2._PV) > 0:
+        self.combatente2.atacar(0, dado1.rolar())
+        self.combatente1.receber_dano(0)
+
+      if (self.combatente1._PV) == 0:
+        print(f"{self.combatente2.nome} ganhou")
+
+      if (self.combatente2._PV) == 0:
+        print(f"{self.combatente1.nome} ganhou")
+
+class Batalha_Em_Grupo():
+  def __init__(self, combatente1, combatente2):
+    self.combatente1 = combatente1
+    self.combatente2 = combatente2
+    n_combatente = 0
+    n_combatente2 = 0
+
+    vivo = True
+    vivo2 = True
+
+    while vivo == True and vivo2 == True:
+      n_combatente = 0
+      n_combatente2 = 0
+
+      for var_aux in range(0, len(self.combatente1)):
+        n_combatente = n_combatente + 1
+        if self.combatente1[var_aux]._PV != 0:
+          print(f"PV{n_combatente}: {self.combatente1[var_aux]._PV}")
+
+      for var_aux2 in range (0, len(self.combatente2)):
+        n_combatente2 = n_combatente2 + 1
+        if self.combatente2[var_aux2]._PV != 0:
+          print(f"PV_b{n_combatente2}: {self.combatente2[var_aux2]._PV}")
+
+      n_combatente = 0
+      n_combatente2 = 0
+
+      for var_aux4 in range(0, len(self.combatente1)):
+        vivo = False
+        if self.combatente1[var_aux4]._PV != 0:
+          vivo = True
+
+      for var_aux5 in range(0, len(self.combatente2)):
+        vivo2 = False
+        if self.combatente2[var_aux5]._PV != 0:
+          vivo2 = True
+
+      if vivo == False:
+        print("Grupo 2 ganhou")
+        break
+
+      if vivo2 == False:
+        print("Grupo 1 ganhou")
+        break
+
+      for var_aux3 in range(0, len(self.combatente1)):
+        n_combatente = n_combatente + 1
+        if self.combatente1[var_aux3]._PV != 0:
+
+          escolha1 = input(f"{self.combatente1[var_aux3].nome}, escolha o inimigo: 0 ou 1")
+          escolha2 = input(f"{self.combatente1[var_aux3].nome}, escolha entre ataque, habilidade ou poção")
+
+          escolha1 = int(escolha1)
+
+          if self.combatente1[var_aux3].esta_vivo():
+            if escolha2 == "ataque":
+              self.combatente1[var_aux3].atacar(0, dado1.rolar())
+              self.combatente2[escolha1].receber_dano(var_aux3)
+            elif escolha2 == "habilidade":
+              self.combatente1[var_aux3].habilidade(0,escolha1)
+              self.combatente2[escolha1].receber_dano(var_aux3)
+            elif escolha2 == "poção":
+              self.combatente1[var_aux3].usar_poçao(0)
+
+      for var_aux4 in range(0, len(self.combatente2)):
+        n_combatente2 = n_combatente2 + 1
+        if self.combatente1[var_aux4]._PV != 0:
+
+          escolha3 = input(f"{self.combatente2[var_aux4].nome}, escolha o inimigo")
+          escolha4 = input(f"{self.combatente2[var_aux4].nome}, escolha entre ataque, habilidade ou poção")
+
+          escolha3 = int(escolha3)
+
+          if self.combatente2[var_aux4].esta_vivo():
+            if escolha4 == "ataque":
+              self.combatente2[var_aux4].atacar(0, dado1.rolar())
+              self.combatente1[escolha3].receber_dano(var_aux4)
+            elif escolha4 == "habilidade":
+              self.combatente2[var_aux4].habilidade(0,escolha3)
+              self.combatente1[escolha3].receber_dano(var_aux4)
+            elif escolha4 == "poção":
+              self.combatente2[var_aux4].usar_poçao(0)
+
+p1 = Guerreiro("nome", 100, 10, 10, 10, lista_inimigo, inventario2, lista_habilidades2)
+p2 = Arqueiro("nome2", 100, 10, 10, 10, lista_inimigo, inventario2, lista_habilidades2)
+lista_inimigo.append(p1)
+lista_inimigo.append(p2)
+
+p3 = Mago("nome3", 100, 10, 10, 10, lista_inimigo, inventario2, lista_habilidades1)
+p4 = Guerreiro("nome4", 100, 10, 10, 10, lista_inimigo, inventario2, lista_habilidades2)
+lista_inimigo2.append(p3)
+lista_inimigo2.append(p4)
+
+p5 = Guerreiro("nome5", 100, 10, 10, 10, lista_inimigo4, inventario2, lista_habilidades2)
+lista_inimigo3.append(p5)
+
+orc1 = Orc("nomea", 100, 10, 10, 10, lista_inimigo2, inventario1)
+goblin1 = Goblin_Padrao("nomeb", 100, 10, 10, 10, lista_inimigo3, inventario1)
+lista_inimigo4.append(goblin1)
+
+batalha2 = Batalha_Em_Grupo(lista_inimigo, lista_inimigo2)
