@@ -1,0 +1,62 @@
+class Guerreiro:
+  def __init__(self, nome, PV, força, arma):
+    self.nome = nome
+    self.PV = PV
+    self.força = força
+    self.arma = arma
+
+  def atacar(self):
+    print(f"{self.nome} atacou com {self.arma.dano + self.força} de dano")
+
+class Mago:
+  def __init__(self, nome, PV, força, magia, arma):
+    self.nome = nome
+    self.PV = PV
+    self.força = força
+    self.magia = magia
+
+class Arqueiro:
+  def __init__(self, nome, PV, força, precisão, arma):
+    self.nome = nome
+    self.PV = PV
+    self.força = força
+    self.precisao = precisao
+
+class Inimigo:
+  def __init__(self, PV, força, magia, arma):
+    self.PV = PV
+    self.força = força
+    self.magia = magia
+
+class Arma:
+  def __init__(self, nome, dano):
+    self.nome = nome
+    self.dano = dano
+
+class Poçao:
+  def __init__ (self, nome, cura):
+    self.nome = nome
+    self.cura = cura
+
+arma2 = Arma("b", 10)
+
+guerreiro2 = Guerreiro("a", 10, 10, arma2)
+
+poçao1 = Poçao("Poção de Vida", 20)
+
+espada1 = Arma("Espada Longa", 10)
+
+cajado1 = Arma("Cajado Mágico", 10)
+
+goblin1 = Inimigo(100, 100, 100, "espada1")
+
+def meu_guerreiro():
+
+  guerreiro1 = Guerreiro("guerreiro1", 100, 100, "espada1")
+  informações = (f"Nome: {guerreiro1.nome}, PV: {guerreiro1.PV}, Força: {guerreiro1.força}, Arma: {guerreiro1.arma}")
+
+  return informações
+
+print(meu_guerreiro())
+
+guerreiro2.atacar()
